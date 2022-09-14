@@ -434,7 +434,9 @@ October 2022
 
       - **地域**: 仮想ネットワーク（vnet-spoke-1）と同じ地域を選択
 
-      - **可用性オプション**: インフラストラクチャの冗長は必要ありません
+      - **可用性オプション**: 可用性ゾーン
+
+      - **可用性ゾーン**: ゾーン 1
 
       - **セキュリティの種類**: Standard
 
@@ -513,13 +515,17 @@ October 2022
 
     <img src="images/virtual-machine-06.png" />
 
+<br />
+
 ### Task 2: 仮想マシンの監視設定
 
 - Azure ポータルのトップ画面から ツール に表示される **Azure Monitor** をクリック
 
   <img src="images/defender-for-cloud-01.png" />
 
-- **仮想マシン** を選択、作成した仮想マシンの「**有効にする**」をクリック
+- **仮想マシン** を選択、「**分析情報の構成**」をクリック
+
+- 作成した仮想マシンの「**有効にする**」をクリック
 
   <img src="images/vm-insights-01.png" />
 
@@ -611,27 +617,165 @@ October 2022
 
 ### Task 3: Defender for Endpoint のインストール
 
-- Azure Policy の管理ブレードから **コンプライアンス** を選択
+- Azure Policy の管理ブレードを表示
 
 - Defender for Endpoint エージェントのコンプライアンス状態を確認
 
   <img src="images/vm-configuration-01.png" />
 
-- **修復** を選択
+  ※ ポリシー評価が終了していない場合は、次のタスクを完了後、再度ご確認ください
+
+- **Windows 仮想マシンに Microsoft Defender for Endpoint エージェントをデプロイする** をクリック
+
+- コンプライアンス未準拠のリソースを確認し「**修復タスクの作成**」をクリック
 
   <img src="images/vm-configuration-02.png" />
 
-- 「**修復するポリシー**」タブの **Microsoft Defender for Endpoint エージェントをデプロイする** をクリック
+- 「**修復**」をクリック
 
   <img src="images/vm-configuration-03.png" />
 
-- 「**修復**」をクリック
+- **修復** の「**修復タスク**」タブから修復状態を確認
 
   <img src="images/vm-configuration-04.png" />
 
 <br />
 
-### Task 4: 仮想ネットワーク ピアリングの構成
+### Task 4: 更新プログラムの管理
+
+- 仮想マシンの管理ブレードへ移動し **更新プログラム** を選択
+
+- 「**更新の管理センターを使用して更新プログラムに移動**」をクリック
+
+  <img src="images/update-management-01.png" />
+
+- 「**設定の更新**」をクリック
+
+  <img src="images/update-management-02.png" />
+
+- **プロパティ** を設定し「**次へ**」をクリック
+
+  - **更新設定を変更する**: バッチ オーケストレーション
+
+  - **バッチ オーケストレーション オプション**: Azure によるオーケストレーション (プレビュー)
+
+    <img src="images/update-management-03.png" />
+
+- **Machines** で作成したマシンが表示されていることを確認し「**次へ**」をクリック
+
+  <img src="images/update-management-04.png" />
+
+- 「**確認して変更**」をクリック
+
+- 「**スケジュールの更新**」をクリックしメンテナンス構成を作成
+
+  <img src="images/update-management-06.png" />
+
+- **メンテナンス構成の作成**
+
+  - 「**基本**」タブ
+
+    - **プロジェクトの詳細**
+
+      - **サブスクリプション**: ワークショップで使用中のサブスクリプション
+
+      - **リソース グループ**: ワークショップで使用中のリソース グループ
+
+    - **インスタンスの詳細**
+
+      - **構成名**: vm-update（任意）
+
+      - **地域**: 仮想マシンを展開した地域
+
+      - **メンテナンス スコープ**: ゲスト (Azure VM、Arc 対応 VM/サーバー)
+
+      - **再起動の設定**: 必要に応じて再起動
+
+    <img src="images/update-management-07.png" />
+
+      - **スケジュール**:
+
+        - **開始日**: 任意
+
+        - **メンテナンス期間**: 2 時間 0 分
+
+        - **繰り返し**: 1 月
+
+          - **曜日**: 第 2 水曜日
+
+          - **オフセット (経過日数)**: 1
+
+        <img src="images/update-management-08.png" />
+
+- 「**マシン**」タブ
+
+  リストに作成した仮想マシンが表示されていることを確認し「**次: Updates >**」をクリック
+
+  <img src="images/update-management-09.png" />
+
+- 「**確認および作成**」をクリック
+
+  <img src="images/update-management-10.png" />
+
+  - 更新プログラムの分類から仮想マシンに適用する更新プログラムの種類を選択可
+
+    <img src="images/update-management-11.png" />
+
+  - KB 番号による指定も可
+
+    <img src="images/update-management-12.png" />
+
+- 指定した内容を確認し「**作成**」をクリック
+
+  <img src="images/update-management-13.png" />
+
+- 「**更新プログラムの確認**」をクリック
+
+  <img src="images/update-management-05.png" />
+
+- 今すぐ評価をトリガーするのメッセージが表示されるので「**OK**」をクリック
+
+  <img src="images/update-management-14.png" />
+
+- Recommended updates に表示される更新プログラムの KB ID をメモし「**↓ 1 回限りの更新**」をクリック
+
+  <img src="images/update-management-15.png" />
+
+- 作成した仮想マシンが表示されていることを確認し「**次へ**」をクリック
+
+  <img src="images/update-management-16.png" />
+
+- 「**＋ KB ID/パッケージを含む**」をクリック
+
+  <img src="images/update-management-17.png" />
+
+- メモした KB ID を入力し「**保存**」をクリック
+
+  <img src="images/update-management-18.png" />
+
+- 「**次へ**」をクリック
+
+  <img src="images/update-management-19.png" />
+
+- プロパティを設定し「**次へ**」をクリック
+
+  - **再起動オプション**: 必要に応じて再起動
+
+  - **メンテナンス期間 (分)**: 120
+
+    <img src="images/update-management-20.png" />
+
+- 「**インストール**」をクリック
+
+  <img src="images/update-management-21.png" />
+
+- 「**履歴**」タブからログを確認可
+
+  <img src="images/update-management-22.png" />
+
+<br />
+
+### Task 5: 仮想ネットワーク ピアリングの構成
 
 - リソース グループ内の仮想ネットワーク（vnet-spoke-1）を選択
 
@@ -677,19 +821,297 @@ October 2022
 
 <br />
 
-## Exercise 6: Network Watcher の設定
+### Task 6: 仮想マシンの Windows Firewall の構成
+
+- 作成した仮想マシンの管理ブレードへ移動
+
+- 「**接続**」-「**Bastion**」を選択
+
+  <img src="images/connect-vm-01.png" />
+
+- ユーザー名、パスワードを入力し「**接続**」をクリック
+
+  <img src="images/connect-vm-02.png" />
+
+- ブラウザの新しいタブに Windows Server の画面が表示
+
+  <img src="images/connect-vm-03.png" />
+
+- スタート メニューからコントロール パネルを選択
+
+- 「**System and Security**」を選択し「Administrative Tools」をクリック
+
+  <img src="images/connect-vm-04.png" />
+
+- 「**Windows Defender Firewall with Advanced Security」をダブルクリックして起動
+
+  <img src="images/connect-vm-05.png" />
+
+- 「**Inbound Rules**」を選択
+
+- 「**Core Networking Diagnostics - ICMP Echo Request (ICMPv4-In)**」の Profile が Private の項目をダブルクリック
+
+  <img src="images/connect-vm-06.png" />
+
+- 「**General**」タブで「Enabled」にチェック
+
+  <img src="images/connect-vm-07.png" />
+
+- 「**Scope**」タブで「**Remote IP address**」の「**Any IP address**」をチェック
+
+  <img src="images/connect-vm-08.png" />
+
+- 「**OK**」をクリックして変更を適用
+
+- ルールが有効になったことを確認
+
+  <img src="images/connect-vm-09.png" />
+
+- ブラウザのタブを閉じて接続を切断
+
+<br />
+
+### 参考情報
+
+- [Update Management センター (プレビュー) のサポート マトリックス](https://docs.microsoft.com/ja-jp/azure/update-center/support-matrix?tabs=azurevm%2Cazurevm-os)
+
+- [更新プログラムとメンテナンスの概要](https://docs.microsoft.com/ja-jp/azure/virtual-machines/updates-maintenance-overview)
+
+- [Azure VM での VM ゲストの自動パッチ適用](https://docs.microsoft.com/ja-jp/azure/virtual-machines/automatic-vm-guest-patching)
+
+<br />
+
+## Exercise 6: ネットワーク診断の設定と監視
 
 <br />
 
 ### Task 1: NSG フロー ログの収集
 
+- Azure ポータルのトップ画面から **検索バー** のテキストボックスに「**network**」と入力
+
+- 表示される候補より「**Network Watcher**」を選択
+
+  <img src="images/network-watcher-01.png" />
+
+- **NSG フロー ログ** を選択し「**＋ 作成**」をクリック
+
+  <img src="images/network-watcher-04.png" />
+
+- 使用中のサブスクリプションを選択し「**＋ NSG の選択**」をクリック
+
+  <img src="images/network-watcher-05.png" />
+
+- 作成した仮想マシンと仮想マシンの展開先のサブネットの NSG を選択し「**選択の確認**」をクリック
+
+  <img src="images/network-watcher-06.png" />
+
+- 「**新しいストレージ アカウントの作成**」をクリック
+
+  <img src="images/network-watcher-07.png" />
+
+- 新しいストレージ アカウントを作成
+
+  - **名前**: 任意（英語小文字、数字の組み合わせ）
+
+  - **アカウントの種類**: StorageV2 (汎用 v2)
+
+  - **パフォーマンス**: Standard
+
+  - **レプリケーション**: ローカル冗長ストレージ (LRS)
+
+  - **場所**: 仮想ネットワークの展開先と同じ地域
+
+  - **リソース グループ**: ワークショップで使用中のリソース グループ
+
+  - **TLS の最小バージョン**: バージョン 1.2
+
+    <img src="images/network-watcher-08.png" />
+  
+- 「**次: 構成 >**」をクリック
+
+    <img src="images/network-watcher-09.png" />
+
+- 構成を行い「**確認および作成**」をクリック
+
+  - **フロー ログのバージョン**: バージョン 2
+
+  - **Traffice Analytics を有効にする**: チェック
+
+  - **トラフィック分析の処理間隔**: 1 時間ごと（既定）
+
+  - **サブスクリプション**: ワークショップで使用中のサブスクリプション
+
+  - **Log Analytics ワークスペース**: 使用中の環境に作成済みのワークスペース
+
+    <img src="images/network-watcher-10.png" />
+
+- 指定した内容を確認し「**作成**」をクリック
+
 <br />
 
 ### Task 2: 接続モニターの作成
+
+- Network Watcher の管理ブレードで「**接続モニター**」を選択
+
+- 「**＋ 作成**」をクリック
+
+  <img src="images/network-watcher-11.png" />
+
+- 「**基本**」タブの設定を行い「**次へ: テスト グループ >>**」をクリック
+
+  - **接続モニター名**: connection-monitor-1（任意）
+
+  - **サブスクリプション**: ワークショップで使用中のサブスクリプション
+
+  - **リージョン**: 仮想ネットワークの展開先と同じ地域
+
+  - **接続モニターによって作成されたワークスペースを使用する**: オフ
+
+  - **サブスクリプション**: ワークショップで使用中のサブスクリプション
+
+  - **リージョン**: 仮想ネットワークの展開先と同じ地域
+
+  - **ワークスペース**: 使用中の環境に作成済みのワークスペース
+
+    <img src="images/network-watcher-12.png" />
+
+- **テスト グループの詳細の追加** で **テスト グループ名** を入力
+
+  例）test-group-1（任意）
+
+- 「**ソースの追加**」をクリック
+
+  <img src="images/network-watcher-13.png" />
+
+  - **ソースの追加** でエンドポイントとなる仮想マシンを選択し「**エンドポイントの追加**」をクリック
+
+    - **Azure エンドポイント** を選択（既定）
+
+    - **型**: Virtual Machines（既定）
+
+    - vnet-hub に展開されている仮想マシン（vm-monitor）を選択
+
+      <img src="images/network-watcher-14.png" />
+
+- 「**テスト構成の追加**」をクリック
+
+  <img src="images/network-watcher-15.png" />
+
+  - **テスト構成の追加** で構成を行い「**テスト構成の追加**」をクリック
+
+    - **テスト構成名**: test1（任意）
+
+    - **プロトコル**: ICMP
+
+    - **テストの頻度**: 1 分ごと
+
+    - **成功のしきい値**:
+    
+      - **チェックの失敗率 (%)**: 100
+
+      - **ラウンド トリップ時間 (ミリ秒)**: 3000
+
+      <img src="images/network-watcher-16.png" />
+
+- 「**ターゲットの追加**」をクリック
+
+  <img src="images/network-watcher-17.png" />
+
+  - **ターゲットの追加** で対象となる仮想マシンを選択し「**エンドポイントの追加**」をクリック
+
+    - **Azure エンドポイント** を選択（既定）
+
+    - **型**: Virtual Machines（既定）
+
+    - 先の手順で作成した仮想マシンを選択
+
+    <img src="images/network-watcher-18.png" />
+
+- 指定した内容を確認し「**テスト グループの追加**」をクリック
+
+  <img src="images/network-watcher-19.png" />
+
+- 「**次へ: アラートの作成 >>**」をクリック
+
+  <img src="images/network-watcher-20.png" />
+
+- **アラートの作成** でアラートの有効化、アクション グループの選択を行い「**確認および作成**」をクリック
+
+  - **アラートの作成**: オン
+
+  - **アラート グループ名**: 正常性アラート構成時に作成したアラート グループを選択
+
+    <img src="images/network-watcher-21.png" />
+
+- 指定した内容を確認し「**作成**」をクリック
+
+  <img src="images/network-watcher-22.png" />
+
+- 接続モニターの作成が完了後、テストが開始
+
+  <img src="images/network-watcher-23.png" />
+
+- テスト グループ名をクリックし、テストの概要を確認
+
+  <img src="images/network-watcher-24.png" />
+
+- テスト構成でテスト結果を確認
+
+  <img src="images/network-watcher-25.png" />
+
+- テスト グループ配下の項目をクリック
+
+  <img src="images/network-watcher-26.png" />
+
+- トポロジやパフォーマンスの状況を確認
+
+  <img src="images/network-watcher-27.png" />
+
+<br />
+
+### Task 3: NSG 診断による通信状況の確認
+
+- Network Watcher の管理ブレードで「**NSG 診断**」を選択
+
+- ツールに診断を行う情報を入力し「**チェック**」をクリック
+
+  - **サブスクリプション**: ワークショップで使用中のサブスクリプション
+
+  - **リソース グループ**: ワークショップで使用中のリソース グループ
+
+  - **サポートされているリソースの種類**: 仮想マシン
+
+  - **リソース**: 作成した仮想マシン
+
+  - **プロトコル**: TCP
+
+  - **方向**: 受信
+
+  - **ソースの種類**: サービス タグ
+
+  - **サービス タグ**: Internet
+
+  - **ターゲット IP アドレス**: 仮想マシンの IP アドレス
+
+  - **ターゲット ポート**: 3389
+
+    <img src="images/network-watcher-02.png" />
+
+- 指定したトラフィックの状態を確認
+
+  <img src="images/network-watcher-03.png" />
+
+  ※ サブネット、仮想マシンのネットワーク セキュリティ グループでのアクションを表示
+
+  ※ インターネットからの RDP での接続が拒否されていることを確認
 
 <br />
 
 ## Exercise 7: 
 
 <br />
+
+### 参考情報
+
+- [可用性ゾーン間で仮想マシンのディザスター リカバリーを有効にする](https://docs.microsoft.com/ja-jp/azure/site-recovery/azure-to-azure-how-to-enable-zone-to-zone-disaster-recovery)
 
