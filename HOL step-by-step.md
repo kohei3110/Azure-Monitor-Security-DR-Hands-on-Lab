@@ -32,6 +32,7 @@ October 2022
 - [Exercise 5: 仮想マシンの展開](#exercise-5-仮想マシンの展開)
 
 <br />
+<hr />
 
 ## Exercise 1: Azure ロールの割り当て
 
@@ -131,6 +132,7 @@ October 2022
 - [仮想マシンの管理者ログイン](https://docs.microsoft.com/ja-jp/azure/role-based-access-control/built-in-roles#virtual-machine-administrator-login)
 
 <br />
+<hr />
 
 ## Exercise 2: 正常性アラートの構成
 
@@ -403,8 +405,9 @@ October 2022
 - [組み込みのポリシー定義](https://docs.microsoft.com/ja-jp/azure/governance/policy/samples/built-in-policies)
 
 <br />
+<hr />
 
-## Exercise 5: 仮想マシンの展開と構成
+## Exercise 5: 仮想マシンの展開とネットワークの構成
 
 <br />
 
@@ -462,6 +465,8 @@ October 2022
 
       - **既存の Windows Server ライセンスを使用しますか**: オフ
 
+        <br />
+
       <img src="images/virtual-machine-02.png" />
 
       ※ 仮想マシンのサイズ選択では、ポリシーで許可した SKU のみが表示されることを確認
@@ -474,6 +479,8 @@ October 2022
     - ディスクのオプション
 
       - **OS ディスクの種類**: Standard SSD
+
+        <br />
 
       <img src="images/virtual-machine-03.png" />
 
@@ -497,6 +504,8 @@ October 2022
 
       - **負荷分散のオプション**: なし
 
+        <br />
+
       <img src="images/virtual-machine-04.png" />
 
   - 「**管理**」タブ
@@ -514,10 +523,91 @@ October 2022
   - 指定した内容を確認し「**作成**」をクリック
 
     <img src="images/virtual-machine-06.png" />
+  
+<br />
+
+### Task 2: 仮想マシンのディザスター リカバリー構成
+
+- 仮想マシンの管理ブレードへ移動し **ディザスター リカバリー** を選択
+
+  <img src="images/vm-zone-dr-01.png" />
+
+- **可用性ゾーン間のディザスター リカバリーを行いますか** に **はい** を選択し「**次へ: 詳細設定**」をクリック
+
+  <img src="images/vm-zone-dr-02.png" />
+
+- 設定の内容を確認し「**次へ: レプリケーションを確認して開始する**」をクリック
+
+  ※ 設定は既定のまま、Recovery Services コンテナーや Automation アカウントが作成されることを確認
+
+  <img src="images/vm-zone-dr-03.png" />
+
+- 「**レプリケーションの開始**」をクリック
+
+  <img src="images/vm-zone-dr-04.png" />
+
+  ※ 最初のレプリケーションの完了まで 20 分ほどかかるため次のタスクを実行
 
 <br />
 
-### Task 2: 仮想マシンの監視設定
+### Task 3: 仮想ネットワーク ピアリングの構成
+
+- リソース グループ内の仮想ネットワーク（vnet-spoke-1）を選択
+
+- **ピアリング** を選択し「**＋ 追加**」をクリック
+
+  <img src="images/vnet-peering-01.png" />
+
+- ピアリングの追加
+
+  - この仮想ネットワーク
+
+    - **ピアリング リンク名**: spoke-to-hub（任意）
+
+    - **リモート仮想ネットワークへのトラフィック**: 許可
+
+    - **リモート仮想ネットワークから転送されたトラフィック**: 許可
+
+    - **仮想ネットワーク ゲートウェイまたはルート サーバー**: なし
+
+  - リモート仮想ネットワーク
+
+    - **ピアリング リンク名**: hub-to-spoke（任意）
+
+    - **仮想ネットワークのデプロイ モデル**: Resource Manager
+
+    - **サブスクリプション**: ワークショップで使用中のサブスクリプション
+
+    - **仮想ネットワーク**: vnet-hub
+
+    - **リモート仮想ネットワークへのトラフィック**: 許可
+
+    - **リモート仮想ネットワークから転送されたトラフィック**: 許可
+
+    - **仮想ネットワーク ゲートウェイまたはルート サーバー**: なし
+
+    <img src="images/vnet-peering-02.png" />
+
+- 「**追加**」をクリック
+
+- **ピアリング状態** が **接続済み** となることを確認
+
+  <img src="images/vnet-peering-03.png" />
+
+<br />
+
+### 参考情報
+
+- [可用性ゾーン間で仮想マシンのディザスター リカバリーを有効にする](https://docs.microsoft.com/ja-jp/azure/site-recovery/azure-to-azure-how-to-enable-zone-to-zone-disaster-recovery)
+
+<br />
+<hr />
+
+## Exercise 6: 仮想マシンの構成
+
+<br />
+
+### Task 1: 仮想マシンの監視設定
 
 - Azure ポータルのトップ画面から ツール に表示される **Azure Monitor** をクリック
 
@@ -615,7 +705,7 @@ October 2022
 
 <br />
 
-### Task 3: Defender for Endpoint のインストール
+### Task 2: Defender for Endpoint のインストール
 
 - Azure Policy の管理ブレードを表示
 
@@ -641,7 +731,7 @@ October 2022
 
 <br />
 
-### Task 4: 更新プログラムの管理
+### Task 3: 更新プログラムの管理
 
 - 仮想マシンの管理ブレードへ移動し **更新プログラム** を選択
 
@@ -739,6 +829,8 @@ October 2022
 
 - Recommended updates に表示される更新プログラムの KB ID をメモし「**↓ 1 回限りの更新**」をクリック
 
+  ※ 複数の更新プログラムが表示される場合は Microsoft Defender Antivirus マルウェア対策プラットフォームの再起動不要な更新プログラムを選択
+
   <img src="images/update-management-15.png" />
 
 - 作成した仮想マシンが表示されていることを確認し「**次へ**」をクリック
@@ -769,59 +861,15 @@ October 2022
 
   <img src="images/update-management-21.png" />
 
+  ※ インストールに数分かかるため次のタスクの後に結果を確認
+
 - 「**履歴**」タブからログを確認可
 
   <img src="images/update-management-22.png" />
 
 <br />
 
-### Task 5: 仮想ネットワーク ピアリングの構成
-
-- リソース グループ内の仮想ネットワーク（vnet-spoke-1）を選択
-
-- **ピアリング** を選択し「**＋ 追加**」をクリック
-
-  <img src="images/vnet-peering-01.png" />
-
-- ピアリングの追加
-
-  - この仮想ネットワーク
-
-    - **ピアリング リンク名**: spoke-to-hub（任意）
-
-    - **リモート仮想ネットワークへのトラフィック**: 許可
-
-    - **リモート仮想ネットワークから転送されたトラフィック**: 許可
-
-    - **仮想ネットワーク ゲートウェイまたはルート サーバー**: なし
-
-  - リモート仮想ネットワーク
-
-    - **ピアリング リンク名**: hub-to-spoke（任意）
-
-    - **仮想ネットワークのデプロイ モデル**: Resource Manager
-
-    - **サブスクリプション**: ワークショップで使用中のサブスクリプション
-
-    - **仮想ネットワーク**: vnet-hub
-
-    - **リモート仮想ネットワークへのトラフィック**: 許可
-
-    - **リモート仮想ネットワークから転送されたトラフィック**: 許可
-
-    - **仮想ネットワーク ゲートウェイまたはルート サーバー**: なし
-
-    <img src="images/vnet-peering-02.png" />
-
-- 「**追加**」をクリック
-
-- **ピアリング状態** が **接続済み** となることを確認
-
-  <img src="images/vnet-peering-03.png" />
-
-<br />
-
-### Task 6: 仮想マシンの Windows Firewall の構成
+### Task 4: 仮想マシンの Windows Firewall の構成
 
 - 作成した仮想マシンの管理ブレードへ移動
 
@@ -867,6 +915,22 @@ October 2022
 
   <img src="images/connect-vm-09.png" />
 
+### Task 5: 仮想マシン上の操作（ファイル作成、ブラウジング）
+
+- 接続中の仮想マシンのデスクトップ上で右クリック
+
+- 「**New**」-「**Text Document**」を選択
+
+  <img src="images/new-text-document-01.png" />
+
+- 任意のファイル名に変更
+
+  <img src="images/new-text-document-02.png" />
+
+- Edge を起動し www.microsoft.com へアクセス
+
+  <img src="images/browser-01.png" />
+
 - ブラウザのタブを閉じて接続を切断
 
 <br />
@@ -880,8 +944,9 @@ October 2022
 - [Azure VM での VM ゲストの自動パッチ適用](https://docs.microsoft.com/ja-jp/azure/virtual-machines/automatic-vm-guest-patching)
 
 <br />
+<hr />
 
-## Exercise 6: ネットワーク診断の設定と監視
+## Exercise 7: ネットワーク診断の設定と監視
 
 <br />
 
@@ -1106,12 +1171,248 @@ October 2022
   ※ インターネットからの RDP での接続が拒否されていることを確認
 
 <br />
+<hr />
 
-## Exercise 7: 
+## Exercise 8: テスト フェールオーバーの実行
+
+<br />
+
+### Task 1: テスト用の仮想ネットワークの作成
+
+- Azure Portal のトップ画面上部の「リソースの作成」をクリック
+
+  <img src="images/create-resources.png" />
+
+- 検索ボックスに **Virtual Network** と入力し、表示される候補より「**Virtual Network**」を選択
+
+  <img src="images/virtual-network-01.png" />
+
+- 「**作成**」をクリック
+
+  <img src="images/virtual-network-02.png" />
+
+- 仮想ネットワークの作成
+
+  - 「**基本**」タブ
+
+    - プロジェクトの詳細
+
+      - **サブスクリプション**: ワークショップで使用中のサブスクリプション
+
+      - **リソース グループ**: ワークショップで使用中のリソース グループ
+
+    - インスタンスの詳細
+
+      - **名前**: vnet-spoke-2（既定）
+
+      - **地域**: フェールオーバー対象の仮想マシンと同じ地域
+
+    <img src="images/virtual-network-03.png" />
+
+  - 「**IP アドレス**」タブ
+
+    - IP アドレス、サブネットは既定の設定（他の仮想ネットワークと重複しないかは確認）
+
+    <img src="images/virtual-network-04.png" />
+
+  - 「**セキュリティ**」タブ
+
+    - BastionHost / DDos Protection Standard / ファイアウォール はすべて無効化（既定）
+
+    <img src="images/virtual-network-05.png" />
+
+- 「**作成**」をクリック
+
+  <img src="images/virtual-network-06.png" />
+
+- 作成した仮想ネットワークの管理ブレードへ移動
+
+- **ピアリング** を選択し「**＋ 作成**」をクリック
+
+  <img src="images/virtual-network-07.png" />
+
+- ピアリングを作成
+
+  - この仮想ネットワーク
+
+    - **ピアリング リンク名**: spoke-2-to-hub（任意）
+
+  - リモート仮想ネットワーク
+
+    - **ピアリング リンク名**: hub-to-spoke-2（任意）
+
+    - **サブスクリプション**: ワークショップで使用中のサブスクリプション
+
+    - **仮想ネットワーク**: vnet-hub
+
+  <img src="images/virtual-network-08.png" />
+
+- 「**追加**」をクリックしてピアリングを構成
+
+<br />
+
+### Task 2: テスト フェールオーバーの実行
+
+- 仮想マシンの管理ブレードへ移動し **ディザスター リカバリー** を選択
+
+- 「**テスト フェールオーバー**」をクリック
+
+  <img src="images/vm-zone-05.png" />
+
+- フェールオーバーの設定を行い「**OK**」をクリック
+
+  - **フェールオーバー元**: 仮想マシンが展開されている地域 (ゾーン 1)
+
+  - **フェールオーバー先**: 仮想マシンが展開されている地域 (ゾーン 2)
+
+  - **Azure 仮想ネットワーク**: 先の手順で作成した仮想ネットワーク
+
+    <img src="images/vm-zone-06.png" />
+
+    ※ **復旧ポイントを選択してください** のリンクをクリックし復旧ポイントの選択が可
+
+- フェールオーバー完了後、リソースを確認
+
+  ※ フェール オーバー設定時に作成された **-asr** が接尾語に付与されたリソース グループを選択
+
+  <img src="images/vm-zone-07.png" />
+
+  ※ 仮想マシン、NIC、ディスクが作成、それぞれ名前の接尾語に **-test** が付与
+
+- テスト フェールオーバーで作成された仮想マシンの管理ブレードへ移動し ** Bastion** を選択
+
+- ユーザー名、パスワードを入力し「**接続**」をクリック
+
+  <img src="images/vm-zone-09.png" />
+
+- 新しいタブで Windows Server の画面が表示
+
+  <img src="images/vm-zone-10.png" />
+
+- ファイルや設定を確認後、タブを閉じて接続を切断
+
+<br />
+
+### Task 3: テスト フェールオーバーのクリーンアップ
+
+- フェールオーバー元の仮想マシンの管理ブレードへ移動し **ディザスター リカバリー** を選択
+
+- 「**テスト フェールオーバーのクリーンアップ**」をクリック
+
+  <img src="images/vm-zone-11.png" />
+
+- 「**テストが完了しました。テスト フェールオーバー仮想マシンを削除してください。**」をチェック
+
+  <img src="images/vm-zone-12.png" />
+
+- 「**OK**」をクリックし、テスト フェールオーバー環境を削除
+
+- リソースの確認
+
+  ※ フェール オーバー設定時に作成された **-asr** が接尾語に付与されたリソース グループを選択
+
+  <img src="images/vm-zone-13.png" />
 
 <br />
 
 ### 参考情報
 
-- [可用性ゾーン間で仮想マシンのディザスター リカバリーを有効にする](https://docs.microsoft.com/ja-jp/azure/site-recovery/azure-to-azure-how-to-enable-zone-to-zone-disaster-recovery)
+- [Site Recovery に関する一般的な質問](https://docs.microsoft.com/ja-jp/azure/site-recovery/site-recovery-faq)
 
+<br />
+<hr />
+
+## Exercise 9: 仮想マシンの監視
+
+<br />
+
+### Task 1: 仮想マシンの分析情報の確認
+
+- 仮想マシンの管理ブレードへ移動し **分析情報** を選択
+
+  <img src="images/vm-insights-15.png" />
+
+- 「**パフォーマンス**」タブを選択し、リソースの使用率を確認
+
+  <img src="images/vm-insights-16.png" />
+
+- 「**マップ**」タブを選択、プロセスの依存関係を確認
+
+  <img src="images/vm-insights-17.png" />
+
+- 仮想マシンのプロセスを展開
+
+  <img src="images/vm-insights-18.png" />
+
+- ポートを展開し接続先を確認
+
+  <img src="images/vm-insights-19.png" />
+
+- Time range で時間の範囲を選択可
+
+  <img src="images/vm-insights-20.png" />
+
+<br />
+
+### Task 2: ログ クエリによるデータ分析とアラート作成
+
+- 仮想マシンの管理ブレードから **ログ** を選択
+
+  <img src="images/azure-monitor-01.png" />
+
+- イベント種別にログをカウントするクエリを実行
+
+  ```
+  Event
+  | summarize count() by Computer, EventLog, EventLevelName
+  | sort by Computer, EventLog, EventLevelName
+  ```
+
+  <img src="images/azure-monitor-02.png" />
+
+- 仮想マシンに特定の Windows イベントが記録された回数を抽出するクエリを実行
+
+  ※ 4625 はログオン失敗イベント
+
+  ```
+  Event 
+  | where EventID == 4625 
+  | where Computer == "vm1"
+  ```
+
+  ※ vm1 は仮想マシン名、使用中の環境のものに変更して実行
+
+  <img src="images/azure-monitor-03.png" />
+
+- 「**＋ アラート ルール**」をクリック
+
+- **しきい値** に「**5**」を入力し、あとは既定のまま「**次へ: アクション >**」をクリック
+
+  <img src="images/azure-monitor-04.png" />
+
+- **アクション グループ** に正常性アラートの構成時に作成したアクション グループを選択し「**次へ: 詳細>**」をクリック
+
+  <img src="images/azure-monitor-05.png" />
+
+- **アラート ルール名** を入力し「**確認および作成**」をクリック
+
+  <img src="images/azure-monitor-06.png" />
+
+- 「**作成**」をクリックし、アラートを作成
+
+<br />
+
+### 参考情報
+
+- [VM insights の概要](https://docs.microsoft.com/ja-jp/azure/azure-monitor/vm/vminsights-overview)
+
+- [VM insights を使用したパフォーマンスのグラフ化](https://docs.microsoft.com/ja-jp/azure/azure-monitor/vm/vminsights-performance)
+
+- [VM insights のマップ機能](https://docs.microsoft.com/ja-jp/azure/azure-monitor/vm/vminsights-maps)
+
+- [VM insights からログをクエリする方法](https://docs.microsoft.com/ja-jp/azure/azure-monitor/vm/vminsights-log-query)
+
+- [Azure Monitor を使用して仮想マシンを監視する](https://docs.microsoft.com/ja-jp/azure/azure-monitor/vm/monitor-virtual-machine-workloads)
+
+<br />
+<hr />
