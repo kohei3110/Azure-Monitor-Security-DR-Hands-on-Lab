@@ -1,0 +1,324 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "userAssignedId": {
+            "type": "string",
+            "defaultValue": "id-CloudWorkshop",
+            "metadata": {
+                "description": "ユーザー割り当てマネージド ID"
+            }
+        },
+        "hub-virtualNetwork": {
+            "type": "string",
+            "defaultValue": "vnet-hub",
+            "metadata": {
+                "description": "仮想ネットワーク名 (Hub)"
+            }
+        },
+        "hub-addressPrefix": {
+            "type": "string",
+            "defaultValue": "10.1.0.0/16",
+            "metadata": {
+                "description": "IPv4 アドレス空間 (Hub)"
+            }
+        },
+        "hub-subnetName": {
+            "type": "string",
+            "defaultValue": "Subnet-1",
+            "metadata": {
+                "description": "サブネット名 (Hub)"
+            }
+        },
+        "hub-subnetPrefix": {
+            "type": "string",
+            "defaultValue": "10.1.1.0/24",
+            "metadata": {
+                "description": "サブネット アドレス範囲 (Hub)"
+            }
+        },
+        "bastionSubnetPrefix": {
+            "type": "string",
+            "defaultValue": "10.1.10.0/24",
+            "metadata": {
+                "description": "AzureBastionSubnet アドレス範囲"
+            }
+        },
+        "spoke-virtualNetwork": {
+            "type": "string",
+            "defaultValue": "vnet-spoke-1",
+            "metadata": {
+                "description": "仮想ネットワーク名 (Spoke)"
+            }
+        },
+        "spoke-addressPrefix": {
+            "type": "string",
+            "defaultValue": "10.2.0.0/16",
+            "metadata": {
+                "description": "IPv4 アドレス空間 (Spoke)"
+            }
+        },
+        "spoke-subnetName": {
+            "type": "string",
+            "defaultValue": "Subnet-1",
+            "metadata": {
+                "description": "サブネット名 (Spoke)"
+            }
+        },
+        "spoke-subnetPrefix": {
+            "type": "string",
+            "defaultValue": "10.2.1.0/24",
+            "metadata": {
+                "description": "サブネット アドレス範囲 (Spoke)"
+            }
+        },
+        "virtualMachineName": {
+            "type": "string",
+            "defaultValue": "vm-monitor",
+            "metadata": {
+                "description": "仮想マシン名"
+            }
+        },
+        "adminUserName": {
+            "type": "string",
+            "defaultValue": "AzureUser",
+            "metadata": {
+                "description": "ローカル管理者"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "パスワード"
+            }
+        },
+        "logAnalyticsWorkspace": {
+            "type": "string",
+            "defaultValue": "log1",
+            "metadata": {
+                "description": "Log Analytics ワークスペース名"
+            }
+        }
+    },
+    "functions": [],
+    "variables": {
+        "subnetNSG": "vnet-spoke-subnet-1-nsg",
+        "bastionPip": "pip-bas1",
+        "bastionHostName": "bas1",
+        "networkInterface": "[concat(parameters('virtualMachineName'), '-nic')]",
+        "osVersion": "2022-datacenter-smalldisk-g2",
+        "machineSize": "Standard_B2ms",
+        "storageType": "Standard_LRS"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "apiVersion": "2018-11-30",
+            "name": "[parameters('userAssignedId')]",
+            "location": "[resourceGroup().location]"
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2020-11-01",
+            "name": "[variables('subnetNSG')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('hub-virtualNetwork')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('hub-addressPrefix')]"
+                    ]
+                }
+            },
+            "resources": [
+                {
+                    "type": "subnets",
+                    "apiVersion": "2020-11-01",
+                    "name": "[parameters('hub-subnetName')]",
+                    "location": "[resourceGroup().location]",
+                    "properties": {
+                        "addressPrefix": "[parameters('hub-subnetPrefix')]"
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Network/virtualNetworks', parameters('hub-virtualNetwork'))]"
+                    ]
+                },
+                {
+                    "type": "subnets",
+                    "apiVersion": "2020-11-01",
+                    "name": "AzureBastionSubnet",
+                    "properties": {
+                        "addressPrefix": "[parameters('bastionSubnetPrefix')]"
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Network/virtualNetworks', parameters('hub-virtualNetwork'))]"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2020-11-01",
+            "name": "[variables('bastionPip')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Static"
+            }
+        },
+        {
+            "type": "Microsoft.Network/bastionHosts",
+            "apiVersion": "2020-11-01",
+            "name": "[variables('bastionHostName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipConfig",
+                        "properties": {
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('hub-virtualNetwork'), 'AzureBastionSubnet')]"
+                            },
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('bastionPip'))]"
+                            }
+                        }
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', variables('bastionPip'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('hub-virtualNetwork'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('hub-virtualNetwork'), 'AzureBastionSubnet')]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2020-11-01",
+            "name": "[variables('networkInterface')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipConfig",
+                        "properties": {
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('hub-virtualNetwork'), parameters('hub-subnetName'))]"
+                            },
+                            "privateIPAllocationMethod": "Dynamic"
+                        }
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('hub-virtualNetwork'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('hub-virtualNetwork'), parameters('hub-subnetName'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2021-11-01",
+            "name": "[parameters('virtualMachineName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[variables('machineSize')]"
+                },
+                "storageProfile": {
+                    "osDisk": {
+                        "createOption": "FromImage",
+                        "name": "[concat(parameters('virtualMachineName'), '-osDisk')]",
+                        "caching": "None",
+                        "managedDisk": {
+                            "storageAccountType": "[variables('storageType')]"
+                        }
+                    },
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "[variables('osVersion')]",
+                        "version": "latest"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterface'))]"
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachineName')]",
+                    "adminUsername": "[parameters('adminUserName')]",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "windowsConfiguration": {
+                        "enableAutomaticUpdates": true,
+                        "provisionVMAgent": true
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterface'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('spoke-virtualNetwork')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('spoke-addressPrefix')]"
+                    ]
+                }
+            },
+            "resources": [
+                {
+                    "type": "subnets",
+                    "apiVersion": "2020-11-01",
+                    "name": "[parameters('spoke-subnetName')]",
+                    "location": "[resourceGroup().location]",
+                    "properties": {
+                        "addressPrefix": "[parameters('spoke-subnetPrefix')]",
+                        "networkSecurityGroup": {
+                            "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('subnetNSG'))]"
+                        }
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Network/virtualNetworks', parameters('spoke-virtualNetwork'))]",
+                        "[resourceId('Microsoft.Network/networkSecurityGroups', variables('subnetNSG'))]"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "apiVersion": "2021-06-01",
+            "name": "[parameters('logAnalyticsWorkspace')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "sku": {
+                    "name": "PerGB2018"
+                },
+                "retentionInDays": 30,
+                "features": {
+                    "enableLogAccessUsingOnlyResourcePermissions": true
+                },
+                "publicNetworkAccessForIngestion": "Enabled",
+                "publicNetworkAccessForQuery": "Enabled"
+            }
+        }
+    ],
+    "outputs": {}
+}
