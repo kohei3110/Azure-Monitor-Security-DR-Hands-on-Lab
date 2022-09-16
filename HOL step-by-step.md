@@ -907,6 +907,16 @@ October 2022
 
   <img src="images/update-management-22.png" />
 
+- Azure ポータルのトップ画面から **検索バー** のテキストボックスに「**update**」と入力
+
+- 表示される候補より「**Update Management センター (プレビュー)**」を選択
+
+  <img src="images/update-management-23.png" />
+
+- 複数の仮想マシンの管理が行えることを確認
+
+  <img src="images/update-management-24.png" />
+
 <br />
 
 ### Task 4: 仮想マシンの Windows Firewall の構成
@@ -1303,11 +1313,17 @@ October 2022
 
 ### Task 2: テスト フェールオーバーの実行
 
+- **site-recovery** ではじまるリソース グループが作成されていることを確認
+
+- リソース グループ内に Automation アカウント、Recovery Services コンテナー、ストレージが作成されていることを確認
+
+  <img src="images/vm-zone-dr-14.png" />
+
 - 仮想マシンの管理ブレードへ移動し **ディザスター リカバリー** を選択
 
 - 「**テスト フェールオーバー**」をクリック
 
-  <img src="images/vm-zone-05.png" />
+  <img src="images/vm-zone-dr-05.png" />
 
 - フェールオーバーの設定を行い「**OK**」をクリック
 
@@ -1317,7 +1333,7 @@ October 2022
 
   - **Azure 仮想ネットワーク**: 先の手順で作成した仮想ネットワーク
 
-    <img src="images/vm-zone-06.png" />
+    <img src="images/vm-zone-dr-06.png" />
 
     ※ **復旧ポイントを選択してください** のリンクをクリックし復旧ポイントの選択が可
 
@@ -1325,7 +1341,7 @@ October 2022
 
   ※ フェール オーバー設定時に作成された **-asr** が接尾語に付与されたリソース グループを選択
 
-  <img src="images/vm-zone-07.png" />
+  <img src="images/vm-zone-dr-07.png" />
 
   ※ 仮想マシン、NIC、ディスクが作成、それぞれ名前の接尾語に **-test** が付与
 
@@ -1333,11 +1349,11 @@ October 2022
 
 - ユーザー名、パスワードを入力し「**接続**」をクリック
 
-  <img src="images/vm-zone-09.png" />
+  <img src="images/vm-zone-dr-09.png" />
 
 - 新しいタブで Windows Server の画面が表示
 
-  <img src="images/vm-zone-10.png" />
+  <img src="images/vm-zone-dr-10.png" />
 
 - ファイルや設定を確認後、タブを閉じて接続を切断
 
@@ -1349,11 +1365,11 @@ October 2022
 
 - 「**テスト フェールオーバーのクリーンアップ**」をクリック
 
-  <img src="images/vm-zone-11.png" />
+  <img src="images/vm-zone-dr-11.png" />
 
 - 「**テストが完了しました。テスト フェールオーバー仮想マシンを削除してください。**」をチェック
 
-  <img src="images/vm-zone-12.png" />
+  <img src="images/vm-zone-dr-12.png" />
 
 - 「**OK**」をクリックし、テスト フェールオーバー環境を削除
 
@@ -1361,7 +1377,7 @@ October 2022
 
   ※ フェール オーバー設定時に作成された **-asr** が接尾語に付与されたリソース グループを選択
 
-  <img src="images/vm-zone-13.png" />
+  <img src="images/vm-zone-dr-13.png" />
 
 <br />
 
