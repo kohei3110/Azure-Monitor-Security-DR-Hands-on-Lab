@@ -74,6 +74,13 @@ October 2022
 <br />
 <hr />
 
+## 使用する環境
+
+<img src="images/azure-resources.png" />
+
+<br />
+<hr />
+
 ## Exercise 1: Azure ロールの割り当て
 
 <img src="images/exercise-1.png" />
@@ -175,6 +182,8 @@ October 2022
 <hr />
 
 ## Exercise 2: 正常性アラートの構成
+
+<img src="images/exercise-2.png" />
 
 <br />
 
@@ -332,6 +341,8 @@ October 2022
 
 ## Exercise 3: Azure リソースの保護
 
+<img src="images/exercise-3.png" />
+
 <br />
 
 ### Task 1: Microsoft Defender for Cloud の有効化
@@ -357,6 +368,8 @@ October 2022
 <br />
 
 ## Exercise 4: Azure Policy による管理ガバナンスの実装
+
+<img src="images/exercise-4.png" />
 
 <br />
 
@@ -448,6 +461,8 @@ October 2022
 <hr />
 
 ## Exercise 5: 仮想マシンの展開とネットワークの構成
+
+<img src="images/exercise-5.png" />
 
 <br />
 
@@ -644,6 +659,8 @@ October 2022
 <hr />
 
 ## Exercise 6: 仮想マシンの構成
+
+<img src="images/exercise-6.png" />
 
 <br />
 
@@ -869,7 +886,7 @@ October 2022
 
 - Recommended updates に表示される更新プログラムの KB ID をメモし「**↓ 1 回限りの更新**」をクリック
 
-  ※ 複数の更新プログラムが表示される場合は Microsoft Defender Antivirus マルウェア対策プラットフォームの再起動不要な更新プログラムを選択
+  ※ 複数の更新プログラムが表示される場合は Microsoft Defender Antivirus の再起動不要な更新プログラムを選択
 
   <img src="images/update-management-15.png" />
 
@@ -1007,6 +1024,8 @@ October 2022
 <hr />
 
 ## Exercise 7: ネットワーク診断の設定と監視
+
+<img src="images/exercise-7.png" />
 
 <br />
 
@@ -1235,6 +1254,8 @@ October 2022
 
 ## Exercise 8: テスト フェールオーバーの実行
 
+<img src="images/exercise-8.png" />
+
 <br />
 
 ### Task 1: テスト用の仮想ネットワークの作成
@@ -1389,6 +1410,8 @@ October 2022
 <hr />
 
 ## Exercise 9: 仮想マシンの監視
+
+<img src="images/exercise-9.png" />
 
 <br />
 

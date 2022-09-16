@@ -56,3 +56,7 @@ October 2022
 ## 環境の設定
 
 ※ロール割り当てに使用するため Azure Active Directory にアカウントを１つ追加
+
+<br />
+
+<img src="images/azure-resources.png" />
