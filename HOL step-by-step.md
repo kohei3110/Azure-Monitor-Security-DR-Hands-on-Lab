@@ -443,7 +443,7 @@ October 2022
 
   <img src="images/azure-policy-12.png" />
 
-  ※ Standard_B2ms, Standard_B2s, Standard_F2s-v2, Standard_D2s_v3 を選択
+  ※ Standard_B2ms, Standard_B2s, Standard_F2s_v2, Standard_D2s_v3 を選択
 
 - 「**確認および作成**」をクリック
 
@@ -565,11 +565,7 @@ October 2022
 
   - 「**管理**」タブ
 
-    - 自動シャットダウン
-
-      - **自動シャットダウンを有効にする**: オン
-
-        ※その他は既定の設定
+      - 既定の設定
 
       <img src="images/virtual-machine-05.png" />
 
