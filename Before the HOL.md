@@ -55,7 +55,21 @@ October 2022
 
 ## 環境の設定
 
-※ロール割り当てに使用するため Azure Active Directory にアカウントを１つ追加
+- ロール割り当てに使用するため Azure Active Directory にアカウントを１つ追加
+
+- VM Insights の既定のワークスペースを設定
+
+  - Azure Monitor の管理ブレードから「**仮想マシン**」-「分析情報の構成**」を選択
+
+  - 「**その他のオンボード オプション**」タブより「**ワークスペースの構成**」をクリック
+
+    <img src="images/workspace-configuration-01.png" />
+
+  - サブスクリプションと Log Analytics ワークスペースを選択
+
+    <img src="images/workspace-configuration-02.png" />
+
+  - 「**設定**」をクリックして終了
 
 <br />
 
