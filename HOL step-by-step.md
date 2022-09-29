@@ -690,7 +690,7 @@ October 2022
 
   - **プロセスと依存関係を有効にする**: オン
 
-  - **Log Analytics workspaces**: log-1（ワークショップ環境に作成済みのワークスペース）
+  - **Log Analytics workspaces**: log1（ワークショップ環境に作成済みのワークスペース）
 
     <img src="images/vm-insights-04.png" />
 
@@ -740,7 +740,7 @@ October 2022
 
       <img src="images/vm-insights-11.png" />
 
-    - 収集するログを選択
+    - **データソース** タブより収集するログを選択
 
       - **データ ソースの種類**: Windows event logs
 
@@ -751,6 +751,16 @@ October 2022
       - **システム**: クリティカル、エラー、警告
 
       <img src="images/vm-insights-12.png" />
+    
+    - **ターゲット** タブより配信先の Log Analytics ワークスペースを指定
+
+      - **ターゲットの種類**: Azure Monitor Logs（既定）
+
+      - **サブスクリプション**: ワークショップで使用中のサブスクリプション
+
+      - **アカウントまたは名前区間**: log1（ワークショップ環境に作成済みのワークスペース）
+
+      <img src="images/target-workspace.png" />
 
     - データ ソースが追加されていることを確認
 
